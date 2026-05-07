@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation | Jackson & Olivia</title>
+
+    <!-- 
+      ================================================================
+      KONFIGURASI EXTERNAL & LIBRARY
+      ================================================================
+    -->
+    <!-- Tailwind CSS untuk styling cepat dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Menggunakan font mewah Cinzel dan Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS Library: Library untuk animasi saat halaman di-scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Konfigurasi Tema Warna Kustom Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        champagne: '#F7E7CE',
+                        gold: '#D4AF37',
+                        darkGold: '#B8860B',
+                        softCream: '#FFFAF0',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        heading: ['Cinzel', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 
+      ================================================================
+      CUSTOM CSS STYLES
+      ================================================================
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-silk text-stone-800 font-sans overflow-x-hidden body-locked">
+
+    <!-- BAGIAN: Envelope Overlay (Kotak Surat Pembuka) -->
+    <div id="envelope-overlay"
+        class="fixed inset-0 z-[10000] flex items-center justify-center bg-stone-900 transition-all duration-1000"
+        style="background-image: url('https://www.transparenttextures.com/patterns/stardust.png');">
+        <div class="text-center w-full flex flex-col items-center justify-center envelope-wrapper">
+
+            <div class="mb-12 transition-opacity duration-1000" id="envelope-text">
+                <h2 class="font-heading text-3xl md:text-5xl text-gold mb-3">Jackson & Olivia</h2>
+                <p class="font-sans text-white/60 text-xs md:text-sm tracking-[0.4em] uppercase">The Wedding Invitation
+                </p>
+            </div>
+
+            <!-- Envelope Graphic -->
+            <div class="relative w-72 h-48 sm:w-80 sm:h-56 cursor-pointer transition-transform duration-300 hover:scale-105"
+                id="envelope-container" onclick="openEnvelope()">
+                <!-- Back of envelope -->
+                <div class="absolute inset-0 bg-darkGold rounded-md shadow-2xl"></div>
+
+                <!-- Paper inside -->
+                <div id="envelope-paper"
+                    class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-[90%] bg-softCream z-10 transition-all duration-700 flex flex-col items-center justify-center rounded-t-md p-4 shadow-inner">
+                    <span class="font-heading text-gold text-2xl">J & O</span>
+                    <div class="w-12 h-px bg-gold/50 my-3"></div>
+                    <span class="font-serif italic text-stone-600 text-sm">You're Invited</span>
+                </div>
+
+                <!-- Envelope Left/Right Flaps (Front) -->
+                <div class="absolute inset-0 z-20 pointer-events-none"
+                    style="background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%); clip-path: polygon(0 0, 50% 50%, 0 100%); background-color: #D4AF37;">
+                </div>
+                <div class="absolute inset-0 z-20 pointer-events-none"
+                    style="background: linear-gradient(to left, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%); clip-path: polygon(100% 0, 50% 50%, 100% 100%); background-color: #D4AF37;">
+                </div>
+
+                <!-- Envelope Bottom Flap (Front) -->
+                <div class="absolute inset-0 z-30 pointer-events-none"
+                    style="background: linear-gradient(to top, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 100%); clip-path: polygon(0 100%, 50% 50%, 100% 100%); background-color: #c7a128;">
+                </div>
+
+                <!-- Envelope Top Flap -->
+                <div id="envelope-flap"
+                    class="absolute top-0 left-0 w-full h-full z-40 origin-top transition-transform duration-700"
+                    style="clip-path: polygon(0 0, 100% 0, 50% 50%); background-color: #e6c55c;">
+                    <!-- Wax Seal -->
+                    <div
+                        class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-red-800 rounded-full shadow-lg flex items-center justify-center border border-red-900/50">
+                        <div class="w-12 h-12 rounded-full border border-red-700 flex items-center justify-center">
+                            <span class="font-heading text-white/90 text-sm">Open</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-14 text-white/50 text-xs font-sans tracking-[0.3em] uppercase animate-pulse"
+                id="envelope-instruction">
+                Tap the envelope to open
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- AUDIO: Musik latar dari GitHub (RAW link) -->
+    <!-- ================================================================ -->
+    <audio id="music" autoplay loop>
+        <source src="https://raw.githubusercontent.com/zackalb/Website-Wedding/main/vidgap-com-_ruanglyrics-7605887874285735186-music.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <!-- Tombol Pemutar Musik (Styling sesuai tema pernikahan) -->
+    <div id="music-control" class="fixed bottom-5 right-5 z-[1000] cursor-pointer group">
+        <div class="relative">
+            <!-- Lingkaran latar belakang -->
+            <div class="w-14 h-14 rounded-full bg-gold shadow-lg flex items-center justify-center transition-all duration-300 group-hover:bg-darkGold group-hover:scale-105">
+                <!-- Ikon Play (akan berganti menggunakan JS) -->
+                <svg id="music-icon" class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <!-- Efek gelombang suara (animasi saat musik diputar) -->
+            <div id="music-wave" class="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300">
+                <div class="absolute inset-0 rounded-full border-2 border-gold animate-ping"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAGIAN: Wadah Animasi Daun Gugur (Floating Elements) -->
+    <div id="leaf-container"></div>
+
+    <!-- BAGIAN: Navigasi (Sticky Navbar) -->
+    <nav class="fixed top-0 w-full z-50 sticky-nav border-b border-gold/20 py-4 transition-all duration-300"
+        id="navbar">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <span class="font-heading text-gold tracking-widest text-lg">J & O</span>
+            <div class="hidden md:flex space-x-8 font-sans text-xs tracking-[0.2em] uppercase">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#ceremony" class="nav-link">Ceremony</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#rsvp" class="nav-link">RSVP</a>
+            </div>
+            <div class="md:hidden text-gold cursor-pointer" onclick="toggleMobileMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform duration-300" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" id="mobile-menu-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-stone-900/95 z-[40] transition-all duration-300 opacity-0 pointer-events-none flex flex-col justify-center items-center backdrop-blur-md">
+        <div class="flex flex-col space-y-8 text-center font-sans text-sm tracking-[0.3em] uppercase">
+            <a href="#home" class="text-gold hover:text-white transition-colors" onclick="toggleMobileMenu()">Home</a>
+            <a href="#ceremony" class="text-gold hover:text-white transition-colors" onclick="toggleMobileMenu()">Ceremony</a>
+            <a href="#gallery" class="text-gold hover:text-white transition-colors" onclick="toggleMobileMenu()">Gallery</a>
+            <a href="#rsvp" class="text-gold hover:text-white transition-colors" onclick="toggleMobileMenu()">RSVP</a>
+        </div>
+    </div>
+
+    <!-- BAGIAN: Hero Section (Tampilan Utama) -->
+    <section id="home" class="relative h-[100dvh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Foto Utama Pasangan -->
+            <img src="https://lh3.googleusercontent.com/d/1A2B3C4D5E6F7G8H9I0J" alt="Jackson and Olivia"
+                class="w-full h-full object-cover opacity-80 scale-105 transition-transform duration-[10000ms] ease-out"
+                id="hero-img"
+                onerror="this.src='https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000'">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-softCream"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4" data-aos="fade-up" data-aos-duration="1500">
+            <p class="font-serif italic text-white text-lg md:text-xl mb-4 tracking-widest">The Wedding of</p>
+            <h1 class="font-heading text-4xl md:text-7xl text-white mb-6 tracking-tighter leading-tight">
+                Jackson <span class="block md:inline">&</span> Olivia
+            </h1>
+            <div class="w-24 h-px bg-gold mx-auto mb-6"></div>
+            <p class="font-sans text-white uppercase tracking-[0.4em] text-sm md:text-base">Friday, 7 August 2026</p>
+        </div>
+
+        <!-- Icon Scroll Indikator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
+                </path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- BAGIAN: Teks Undangan Utama -->
+    <section class="py-24 px-6 bg-softCream">
+        <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
+            <div class="mb-12">
+                <p class="font-serif italic text-stone-500 mb-2">Together with their parents</p>
+                <h3 class="font-heading text-gold text-lg tracking-widest mb-12">
+                    Mr. and Mrs. Brooks & Mr. and Mrs. Thompson
+                </h3>
+                <p class="font-serif text-2xl md:text-3xl text-stone-700 leading-relaxed italic">
+                    "request the honor of your presence <br>at the celebration of their marriage"
+                </p>
+            </div>
+
+            <div class="mb-12" data-aos="zoom-in" data-aos-delay="200">
+                <h2 class="font-heading text-3xl md:text-5xl text-darkGold mb-4">
+                    Jackson Daniel Brooks<br>
+                    <span class="text-xl font-serif italic text-stone-400">&</span><br>
+                    Olivia Isabella Thompson
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN: Hitung Mundur (Countdown Timer) -->
+    <section class="py-16 bg-white border-y border-gold/10">
+        <div class="container mx-auto px-6">
+            <div id="countdown" class="flex justify-center items-center space-x-4 md:space-x-12 text-center">
+                <div class="flex flex-col">
+                    <span id="days" class="text-3xl md:text-6xl font-heading text-gold">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">Days</span>
+                </div>
+                <span class="text-2xl text-gold/30 mt-[-20px]">:</span>
+                <div class="flex flex-col">
+                    <span id="hours" class="text-3xl md:text-6xl font-heading text-gold">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">Hours</span>
+                </div>
+                <span class="text-2xl text-gold/30 mt-[-20px]">:</span>
+                <div class="flex flex-col">
+                    <span id="minutes" class="text-3xl md:text-6xl font-heading text-gold">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">Mins</span>
+                </div>
+                <span class="text-2xl text-gold/30 mt-[-20px]">:</span>
+                <div class="flex flex-col">
+                    <span id="seconds" class="text-3xl md:text-6xl font-heading text-gold">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">Secs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN: Informasi Acara & Lokasi (Maps) -->
+    <section id="ceremony" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <!-- Kolom Teks Detail -->
+            <div data-aos="fade-right">
+                <h4 class="font-heading text-gold tracking-widest mb-2">When & Where</h4>
+                <h2 class="font-serif text-4xl mb-8 text-stone-800">Wedding Ceremony & Reception</h2>
+
+                <div class="space-y-6 text-stone-600 font-sans">
+                    <div class="flex items-start">
+                        <div
+                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-heading text-xs tracking-widest text-gold uppercase">The Date</p>
+                            <p class="text-lg">Friday, 7 August 2026</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-heading text-xs tracking-widest text-gold uppercase">The Time</p>
+                            <p class="text-lg">09:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-heading text-xs tracking-widest text-gold uppercase">The Venue</p>
+                            <p class="text-lg">The Savoy Hotel</p>
+                            <p class="text-stone-500">London, England</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-heading text-xs tracking-widest text-gold uppercase">Dress Code</p>
+                            <p class="text-lg">Formal Attire / Black Tie</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Google Maps -->
+            <div class="rounded-lg overflow-hidden shadow-2xl border border-gold/20 h-96" data-aos="fade-left">
+                <iframe width="100%" height="100%" frameborder="0" scrolling="no"
+                    src="https://maps.google.com/maps?q=The%20Savoy%20Hotel%20London&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    style="filter: grayscale(1) contrast(1.2) opacity(0.8);">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN: Galeri Foto (8 Gambar) -->
+    <section id="gallery" class="py-24 bg-stone-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h4 class="font-heading text-gold tracking-widest mb-2">Our Moments</h4>
+                <h2 class="font-serif text-4xl text-stone-800 italic">Photo Gallery</h2>
+            </div>
+
+            <!-- Grid Galeri -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Baris 1: Aset asli -->
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10"
+                    data-aos="zoom-in">
+                    <img src="https://lh3.googleusercontent.com/d/PHOTO_ID_1"
+                        onerror="this.src='https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600'"
+                        cla

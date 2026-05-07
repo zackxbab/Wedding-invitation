@@ -1,0 +1,100 @@
+/* Gaya latar belakang dengan tekstur sutra halus */
+.bg-silk {
+    background-color: #FFFAF0;
+    background-image: url("https://www.transparenttextures.com/patterns/silk.png");
+}
+
+/* Navigasi transparan dengan efek blur */
+.sticky-nav {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 250, 240, 0.9);
+}
+
+/* Dekorasi link navigasi */
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #D4AF37;
+    transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* --- ANIMASI DAUN GUGUR --- */
+#leaf-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+.leaf {
+    position: absolute;
+    display: block;
+    width: 15px;
+    height: 15px;
+    background-color: #D4AF37;
+    opacity: 0.3;
+    border-radius: 2px 20px 2px 20px;
+    animation: fall linear infinite;
+    filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+}
+@keyframes fall {
+    0% {
+        transform: translate(0, -10px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50px, 110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Efek hover pada galeri foto */
+.gallery-item:hover {
+    box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.5);
+    z-index: 10;
+}
+
+/* --- ENVELOPE OVERLAY --- */
+.body-locked {
+    overflow: hidden !important;
+}
+
+.envelope-wrapper {
+    perspective: 1000px;
+}
+
+.envelope-open-flap {
+    transform: rotateX(180deg);
+    z-index: 5 !important;
+}
+
+.envelope-paper-up {
+    transform: translate(-50%, -60px) !important;
+    z-index: 25 !important;
+}
+
+.envelope-fade-out {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50px);
+}
