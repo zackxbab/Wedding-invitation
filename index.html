@@ -11,20 +11,16 @@
       KONFIGURASI EXTERNAL & LIBRARY
       ================================================================
     -->
-    <!-- Tailwind CSS untuk styling cepat dan responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts: Menggunakan font mewah Cinzel dan Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
 
-    <!-- AOS Library: Library untuk animasi saat halaman di-scroll -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Konfigurasi Tema Warna Kustom Tailwind -->
     <script>
         tailwind.config = {
             theme: {
@@ -45,12 +41,103 @@
         }
     </script>
 
-    <!-- 
-      ================================================================
-      CUSTOM CSS STYLES
-      ================================================================
-    -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- CSS TAMBAHAN UNTUK MEMASTIKAN AMPLOP BISA DIKLIK -->
+    <style>
+        /* Pastikan envelope-container bisa diklik */
+        #envelope-container {
+            cursor: pointer !important;
+            z-index: 10001 !important;
+            position: relative !important;
+        }
+        
+        /* Pastikan tidak ada elemen yang menutupi amplop */
+        #envelope-overlay {
+            z-index: 10000 !important;
+        }
+        
+        /* Pastikan semua flap tidak menghalangi klik */
+        #envelope-container > div {
+            pointer-events: none;
+        }
+        
+        /* Kecuali container utama */
+        #envelope-container {
+            pointer-events: auto !important;
+        }
+        
+        /* Animasi yang sudah ada */
+        body.body-locked {
+            overflow: hidden;
+        }
+        
+        .envelope-open-flap {
+            transform: rotateX(-180deg) !important;
+        }
+        
+        .envelope-paper-up {
+            transform: translateY(-30px) !important;
+        }
+        
+        .envelope-fade-out {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        
+        #leaf-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .leaf {
+            position: absolute;
+            background-color: #D4AF37;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            opacity: 0.5;
+            animation: fall linear infinite;
+            border-radius: 2px;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .sticky-nav {
+            transition: all 0.3s ease;
+            background: rgba(255, 250, 240, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #D4AF37;
+        }
+        
+        .gallery-item {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body class="bg-silk text-stone-800 font-sans overflow-x-hidden body-locked">
@@ -67,9 +154,13 @@
                 </p>
             </div>
 
-            <!-- Envelope Graphic -->
-            <div class="relative w-72 h-48 sm:w-80 sm:h-56 cursor-pointer transition-transform duration-300 hover:scale-105"
-                id="envelope-container" onclick="openEnvelope()">
+            <!-- Envelope Graphic - DITAMBAHKAN onmousedown sebagai backup -->
+            <div class="relative w-72 h-48 sm:w-80 sm:h-56 transition-transform duration-300 hover:scale-105"
+                id="envelope-container" 
+                onclick="console.log('Amplop diklik via onclick'); openEnvelope();"
+                onmousedown="console.log('Amplop ditekan via onmousedown');"
+                style="cursor: pointer;">
+                
                 <!-- Back of envelope -->
                 <div class="absolute inset-0 bg-darkGold rounded-md shadow-2xl"></div>
 
@@ -97,7 +188,7 @@
                 <!-- Envelope Top Flap -->
                 <div id="envelope-flap"
                     class="absolute top-0 left-0 w-full h-full z-40 origin-top transition-transform duration-700"
-                    style="clip-path: polygon(0 0, 100% 0, 50% 50%); background-color: #e6c55c;">
+                    style="clip-path: polygon(0 0, 100% 0, 50% 50%); background-color: #e6c55c; pointer-events: none;">
                     <!-- Wax Seal -->
                     <div
                         class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-red-800 rounded-full shadow-lg flex items-center justify-center border border-red-900/50">
@@ -115,33 +206,28 @@
         </div>
     </div>
 
-    <!-- ================================================================ -->
     <!-- AUDIO: Musik latar dari GitHub (RAW link) -->
-    <!-- ================================================================ -->
     <audio id="music" autoplay loop>
         <source src="https://raw.githubusercontent.com/zackalb/Website-Wedding/main/vidgap-com-_ruanglyrics-7605887874285735186-music.mp3" type="audio/mpeg">
         Browser Anda tidak mendukung elemen audio.
     </audio>
 
-    <!-- Tombol Pemutar Musik (Styling sesuai tema pernikahan) -->
+    <!-- Tombol Pemutar Musik -->
     <div id="music-control" class="fixed bottom-5 right-5 z-[1000] cursor-pointer group">
         <div class="relative">
-            <!-- Lingkaran latar belakang -->
             <div class="w-14 h-14 rounded-full bg-gold shadow-lg flex items-center justify-center transition-all duration-300 group-hover:bg-darkGold group-hover:scale-105">
-                <!-- Ikon Play (akan berganti menggunakan JS) -->
                 <svg id="music-icon" class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <!-- Efek gelombang suara (animasi saat musik diputar) -->
             <div id="music-wave" class="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300">
                 <div class="absolute inset-0 rounded-full border-2 border-gold animate-ping"></div>
             </div>
         </div>
     </div>
 
-    <!-- BAGIAN: Wadah Animasi Daun Gugur (Floating Elements) -->
+    <!-- BAGIAN: Wadah Animasi Daun Gugur -->
     <div id="leaf-container"></div>
 
     <!-- BAGIAN: Navigasi (Sticky Navbar) -->
@@ -174,10 +260,9 @@
         </div>
     </div>
 
-    <!-- BAGIAN: Hero Section (Tampilan Utama) -->
+    <!-- BAGIAN: Hero Section -->
     <section id="home" class="relative h-[100dvh] flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <!-- Foto Utama Pasangan -->
             <img src="https://lh3.googleusercontent.com/d/1A2B3C4D5E6F7G8H9I0J" alt="Jackson and Olivia"
                 class="w-full h-full object-cover opacity-80 scale-105 transition-transform duration-[10000ms] ease-out"
                 id="hero-img"
@@ -194,7 +279,6 @@
             <p class="font-sans text-white uppercase tracking-[0.4em] text-sm md:text-base">Friday, 7 August 2026</p>
         </div>
 
-        <!-- Icon Scroll Indikator -->
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
             <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
@@ -226,7 +310,7 @@
         </div>
     </section>
 
-    <!-- BAGIAN: Hitung Mundur (Countdown Timer) -->
+    <!-- BAGIAN: Hitung Mundur -->
     <section class="py-16 bg-white border-y border-gold/10">
         <div class="container mx-auto px-6">
             <div id="countdown" class="flex justify-center items-center space-x-4 md:space-x-12 text-center">
@@ -253,22 +337,17 @@
         </div>
     </section>
 
-    <!-- BAGIAN: Informasi Acara & Lokasi (Maps) -->
+    <!-- BAGIAN: Informasi Acara & Lokasi -->
     <section id="ceremony" class="py-24 px-6">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-            <!-- Kolom Teks Detail -->
             <div data-aos="fade-right">
                 <h4 class="font-heading text-gold tracking-widest mb-2">When & Where</h4>
                 <h2 class="font-serif text-4xl mb-8 text-stone-800">Wedding Ceremony & Reception</h2>
-
                 <div class="space-y-6 text-stone-600 font-sans">
                     <div class="flex items-start">
-                        <div
-                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                        <div class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                         </div>
                         <div>
@@ -277,11 +356,9 @@
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <div
-                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                        <div class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div>
@@ -290,14 +367,10 @@
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <div
-                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                        <div class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
                         <div>
@@ -307,11 +380,9 @@
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <div
-                            class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
+                        <div class="w-10 h-10 border border-gold rounded-full flex items-center justify-center shrink-0 mr-4 text-gold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
                         <div>
@@ -322,7 +393,6 @@
                 </div>
             </div>
 
-            <!-- Kolom Google Maps -->
             <div class="rounded-lg overflow-hidden shadow-2xl border border-gold/20 h-96" data-aos="fade-left">
                 <iframe width="100%" height="100%" frameborder="0" scrolling="no"
                     src="https://maps.google.com/maps?q=The%20Savoy%20Hotel%20London&t=&z=15&ie=UTF8&iwloc=&output=embed"
@@ -332,19 +402,209 @@
         </div>
     </section>
 
-    <!-- BAGIAN: Galeri Foto (8 Gambar) -->
+    <!-- BAGIAN: Galeri Foto -->
     <section id="gallery" class="py-24 bg-stone-50">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h4 class="font-heading text-gold tracking-widest mb-2">Our Moments</h4>
                 <h2 class="font-serif text-4xl text-stone-800 italic">Photo Gallery</h2>
             </div>
-
-            <!-- Grid Galeri -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Baris 1: Aset asli -->
-                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10"
-                    data-aos="zoom-in">
-                    <img src="https://lh3.googleusercontent.com/d/PHOTO_ID_1"
-                        onerror="this.src='https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600'"
-                        cla
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in">
+                    <img src="https://lh3.googleusercontent.com/d/PHOTO_ID_1" onerror="this.src='https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600'" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1766104797219-d1c7de7848a3?w=500&auto=format&fit=crop&q=60" onerror="this.src='https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600'" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://lh3.googleusercontent.com/d/PHOTO_ID_3" onerror="this.src='https://media.istockphoto.com/id/1477443027/id/foto/tangan-janji-kelingking-dan-cincin-kawin-pasangan-di-luar-ruangan-perayaan-kepercayaan.jpg?s=612x612&w=0&k=20&c=tA_pt6ecycihEds4hEgKpwOchSm_m9fUEDItSTnf908='" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://lh3.googleusercontent.com/d/PHOTO_ID_4" onerror="this.src='https://plus.unsplash.com/premium_photo-1711188859154-156045c1106b?w=500&auto=format&fit=crop&q=60'" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1537062223249-aec61b3e4d6d?w=500&auto=format&fit=crop&q=60" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="600">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="gallery-item aspect-[3/4] overflow-hidden group rounded-sm border border-gold/10" data-aos="zoom-in" data-aos-delay="700">
+                    <img src="https://images.unsplash.com/photo-1776946340967-de128e4a3f0d?w=500&auto=format&fit=crop&q=60" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN: RSVP -->
+    <section id="rsvp" class="py-24 bg-softCream px-6">
+        <div class="max-w-2xl mx-auto text-center">
+            <div class="border-2 border-gold/30 p-6 md:p-12 relative" data-aos="fade-up">
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold"></div>
+                <h2 class="font-heading text-3xl text-stone-800 mb-6">Will You Join Us?</h2>
+                <p class="text-stone-600 mb-8 font-sans">Please kindly respond to our coordinator to confirm your attendance.</p>
+                <a href="https://wa.me/447700900123" target="_blank" class="inline-block px-10 py-4 bg-gold text-white uppercase tracking-widest text-xs font-semibold hover:bg-darkGold transition-colors duration-300 shadow-lg">RSVP to Mike</a>
+                <p class="mt-6 text-sm text-stone-400 font-sans tracking-wide">Or call: <span class="text-gold">+44 7700 900123</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN: Footer -->
+    <footer class="py-12 bg-white text-center border-t border-gold/10">
+        <p class="font-heading text-gold tracking-[0.5em] text-sm mb-4">J & O</p>
+        <p class="text-stone-400 text-[10px] uppercase tracking-widest">Digital Invitation &bull; 2026</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inisialisasi AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Animasi Daun
+        function createLeaf() {
+            const container = document.getElementById('leaf-container');
+            if (!container) return;
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            leaf.style.left = Math.random() * window.innerWidth + 'px';
+            leaf.style.width = Math.random() * 8 + 6 + 'px';
+            leaf.style.height = leaf.style.width;
+            leaf.style.animationDuration = Math.random() * 2 + 2 + 's';
+            leaf.style.animationDelay = Math.random() * 1 + 's';
+            leaf.style.opacity = Math.random() * 0.5 + 0.3;
+            container.appendChild(leaf);
+            setTimeout(() => leaf.remove(), 5000);
+        }
+        setInterval(createLeaf, 50);
+
+        // Mobile Menu
+        let isMobileMenuOpen = false;
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (isMobileMenuOpen) {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+                menu.classList.add('opacity-100', 'pointer-events-auto');
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+            } else {
+                menu.classList.add('opacity-0', 'pointer-events-none');
+                menu.classList.remove('opacity-100', 'pointer-events-auto');
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
+            }
+        }
+
+        // Navbar Scroll
+        window.onscroll = function() {
+            const nav = document.getElementById("navbar");
+            if (window.pageYOffset > 100) {
+                nav.classList.add("py-2", "shadow-sm");
+                nav.classList.remove("py-4");
+            } else {
+                nav.classList.add("py-4");
+                nav.classList.remove("py-2", "shadow-sm");
+            }
+        };
+
+        // Countdown
+        const targetDate = new Date("August 7, 2026 09:00:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "<p class='font-heading text-gold'>The Celebration Begins!</p>";
+                return;
+            }
+            document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((distance % (86400000)) / 3600000);
+            document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
+            document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
+        }, 1000);
+
+        // ============================================================
+        // FUNGSI OPEN ENVELOPE - DIPERBAIKI
+        // ============================================================
+        function openEnvelope() {
+            console.log('openEnvelope() dipanggil!');
+            
+            // Cek apakah elemen ada
+            const instruction = document.getElementById('envelope-instruction');
+            const text = document.getElementById('envelope-text');
+            const flap = document.getElementById('envelope-flap');
+            const paper = document.getElementById('envelope-paper');
+            const overlay = document.getElementById('envelope-overlay');
+            const img = document.getElementById('hero-img');
+            
+            if (!flap || !paper || !overlay) {
+                console.error('Elemen tidak ditemukan!');
+                return;
+            }
+            
+            // Animasi
+            if (instruction) instruction.style.opacity = '0';
+            if (text) text.style.opacity = '0';
+            
+            flap.classList.add('envelope-open-flap');
+            
+            setTimeout(() => {
+                paper.classList.add('envelope-paper-up');
+            }, 300);
+            
+            setTimeout(() => {
+                overlay.classList.add('envelope-fade-out');
+                document.body.classList.remove('body-locked');
+                if (img) img.style.transform = 'scale(1)';
+                
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    AOS.refresh();
+                    console.log('Amplop terbuka!');
+                }, 1000);
+            }, 1500);
+        }
+
+        // Kontrol Musik
+        const music = document.getElementById('music');
+        const musicControl = document.getElementById('music-control');
+        const musicIcon = document.getElementById('music-icon');
+        const musicWave = document.getElementById('music-wave');
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play().catch(e => console.log('Autoplay diblokir:', e));
+                musicIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9" />';
+                musicWave.classList.remove('opacity-0');
+                musicWave.classList.add('opacity-100');
+            } else {
+                music.pause();
+                musicIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+                musicWave.classList.add('opacity-0');
+                musicWave.classList.remove('opacity-100');
+            }
+        }
+
+        musicControl.addEventListener('click', toggleMusic);
+
+        window.addEventListener('load', () => {
+            music.play().catch(e => console.log('Autoplay tidak diizinkan'));
+            console.log('Halaman siap, amplop bisa diklik!');
+        });
+        
+        music.addEventListener('ended', () => {
+            musicIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+            musicWave.classList.add('opacity-0');
+            musicWave.classList.remove('opacity-100');
+        });
+    </script>
+</body>
+
+</html>
