@@ -1,3 +1,8 @@
+/* Tambahkan ini di style.css paling atas */
+#envelope-text h2,
+#envelope-text p {
+    font-family: Arial, sans-serif !important;
+}
 /* Gaya latar belakang dengan tekstur sutra halus */
 .bg-silk {
     background-color: #FFFAF0;
